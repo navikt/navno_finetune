@@ -1,0 +1,15 @@
+## Introduksjon
+
+I denne notatboken skal vi illustrere hvordan man kan komme i gang med
+finjustering av språkmodeller. Vi skal gå gjennom stegene for å lage et
+[`datasets`](https://huggingface.co/docs/datasets/index) basert på data på
+[datamarkedsplassen](https://data.ansatt.nav.no/). Hvordan teste ytelsen på en
+embeddingmodell på dette datasettet. Og tilslutt, skal vi se hvordan vi kan
+forbedre ytelsen med finjustering.
+
+## Datasett
+
+Før vi kan starte å finjustere trenger vi et datasett vi kan teste på og som vi
+kan bruke til trening. Vi kommer til å benytte [innholdet på
+Nav.no](https://data.ansatt.nav.no/dataproduct/6c7327e2-5894-4423-b6b2-52affa3f5b29/Innhold%20p%C3%A5%20Nav.no/7993897c-9fd4-46ee-86dd-5001621a2695)
+som utgangspunkt.

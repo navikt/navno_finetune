@@ -1,0 +1,11 @@
+[project]
+name = "navno-finetune"
+version = "0.1.0"
+description = "Finjustering av språkmodeller på Nav.no"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "google-cloud-bigquery>=3.29.0",
+    "polars[pyarrow]>=1.23.0",
+    "quarto-cli>=1.6.42",
+]
