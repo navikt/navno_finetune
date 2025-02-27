@@ -1,13 +1,12 @@
-## Introduksjon
+# Finjustere språkmodeller på Nav.no
 
 I denne notatboken skal vi illustrere hvordan man kan komme i gang med
-finjustering av språkmodeller. Vi skal gå gjennom stegene for å lage et
-[`datasets`](https://huggingface.co/docs/datasets/index) basert på data på
-[datamarkedsplassen](https://data.ansatt.nav.no/). Hvordan teste ytelsen på en
-embeddingmodell på dette datasettet. Og tilslutt, skal vi se hvordan vi kan
-forbedre ytelsen med finjustering.
+finjustering av språkmodeller. Vi skal gå gjennom stegene for å gjøre klart et
+datasett basert på data på [datamarkedsplassen](https://data.ansatt.nav.no/).
+Hvordan teste ytelsen på en embeddingmodell på dette datasettet. Og tilslutt,
+skal vi se hvordan vi kan forbedre ytelsen med finjustering.
 
-### Prosjektoppsett
+## Prosjektoppsett
 
 Vi anbefaler at man bruker [`uv`](https://docs.astral.sh/uv/) for å opprette
 prosjekt og styre avhengigheter.
@@ -32,14 +31,14 @@ publisere er den strukturert som et Quarto prosjekt, men det er fullt mulig å
 klone veiledningen og bare kjøre Quarto filen direkte.
 :::
 
-## Datasett
+# Datasett
 
 Før vi kan starte å finjustere trenger vi et datasett vi kan teste på og som vi
 kan bruke til trening. Vi kommer til å benytte [innholdet på
 Nav.no](https://data.ansatt.nav.no/dataproduct/6c7327e2-5894-4423-b6b2-52affa3f5b29/Innhold%20p%C3%A5%20Nav.no/7993897c-9fd4-46ee-86dd-5001621a2695)
 som utgangspunkt.
 
-### Laste ned rådata
+## Laste ned rådata
 
 La oss starte med å laste ned rådata fra BigQuery. For å gjøre dette kommer vi
 til å bruke `google-cloud-bigquery` og [Polars](https://docs.pola.rs/).
@@ -81,7 +80,7 @@ språkmodeller.
 df.head()
 ```
 
-### Strukturere data for språkmodeller
+## Strukturere data for språkmodeller
 
 For å finjustere en embeddingmodell er det i hovedsak _fire_ ulike måter å
 strukturere et datasett:
@@ -144,7 +143,7 @@ df_train = pl.concat([df_title_content, df_title_ingres, df_all_titles_content])
 df_train.describe()
 ```
 
-### Rense datasett
+## Rense datasett
 
 Før vi sier oss fornøyd skal vi vaske dataene våre litt. I tabellene over har du
 kanskje lagt merke til at flere av kolonnene inneholder HTML elementer. Det er
@@ -162,7 +161,7 @@ df_train = df_train.select(
 df_train.head()
 ```
 
-### Lagre til fil
+## Lagre til fil
 
 La oss avslutte med å lagre data til en fil slik at vi enkelt kan gjenskape
 treningen og samtidig dele data med andre på en enkel måte. Et format som kan
