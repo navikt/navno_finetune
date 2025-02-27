@@ -119,10 +119,10 @@ En annen åpenbar kobling er `(tittel, ingress)`
 
 ```{python}
 df_title_ingres = df.filter(
-    pl.col("ingress").str.len_bytes() != 0).select(
+    pl.col("ingress").str.len_bytes() > 0).select(
         pl.col("display_name").alias("anchor"),
         pl.col("ingress").alias("positiv")
-).unique()
+    ).unique()
 df_title_ingres.head()
 ```
 
@@ -155,8 +155,8 @@ enkelt med en `regex` inspirert av
 
 ```{python}
 df_train = df_train.select(
-    pl.col("anchor").str.replace_all("<.*?>", ""),
-    pl.col("positiv").str.replace_all("<.*?>", ""),
+    pl.col("anchor").str.replace_all("<.*?>", " ").str.strip_chars(),
+    pl.col("positiv").str.replace_all("<.*?>", " ").str.strip_chars(),
 )
 df_train.head()
 ```
