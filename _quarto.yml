@@ -29,3 +29,4 @@ format:
     theme:
       light: flatly
       dark: darkly
+    toc: true
