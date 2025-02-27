@@ -7,6 +7,31 @@ finjustering av språkmodeller. Vi skal gå gjennom stegene for å lage et
 embeddingmodell på dette datasettet. Og tilslutt, skal vi se hvordan vi kan
 forbedre ytelsen med finjustering.
 
+### Prosjektoppsett
+
+Vi anbefaler at man bruker [`uv`](https://docs.astral.sh/uv/) for å opprette
+prosjekt og styre avhengigheter.
+
+La oss starte med å lage et prosjekt:
+
+```bash
+uv init --app --python 3.12 navno_finetune
+```
+
+Inne i prosjektet kan vi fjerne `main.py` (eller `hello.py` avhengig av din
+versjon av `uv`). Hvis du ønsker å følge denne veiledningen kan man enkelt
+opprettet en Jupyter Notebook fil og klippe og lime kode fra veiledningen.
+Alternativt kan man strukturere kode etter eget ønske og bruke veiledningen til
+inspirasjon.
+
+::: {.callout collapse="true"}
+## Gjenbruke _denne_ veiledningen
+
+Denne veiledningen er også mulig å gjenbruke ordrett. For å være enkelt å
+publisere er den strukturert som et Quarto prosjekt, men det er fullt mulig å
+klone veiledningen og bare kjøre Quarto filen direkte.
+:::
+
 ## Datasett
 
 Før vi kan starte å finjustere trenger vi et datasett vi kan teste på og som vi
