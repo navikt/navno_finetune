@@ -9,3 +9,8 @@ dependencies = [
     "polars[pyarrow]>=1.23.0",
     "quarto-cli>=1.6.42",
 ]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.1.0",
+]
