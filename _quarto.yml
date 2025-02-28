@@ -30,3 +30,4 @@ format:
       light: flatly
       dark: darkly
     toc: true
+    highlight-style: atom-one
