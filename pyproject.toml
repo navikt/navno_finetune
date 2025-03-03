@@ -8,6 +8,7 @@ dependencies = [
     "google-cloud-bigquery>=3.29.0",
     "polars[pyarrow]>=1.23.0",
     "quarto-cli>=1.6.42",
+    "rich>=13.9.4",
     "sentence-transformers[train]>=3.4.1",
     "transformers[torch]>=4.49.0",
 ]
