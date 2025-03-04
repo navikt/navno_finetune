@@ -10,6 +10,7 @@ render:
 fix:
     uv run ruff check --fix .
     uv run ruff format .
+    uv run nbstripout .
 
 # Sjekk at alt ser bra ut med pre-commit
 lint:
