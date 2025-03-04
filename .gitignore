@@ -1,6 +1,6 @@
 .quarto/
 _site/
-dataset.parquet
+*.parquet
 
 .DS_Store
 
