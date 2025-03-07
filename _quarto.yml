@@ -2,6 +2,13 @@ project:
   type: website
 
 website:
+  announcement:
+    content: "**Ikke opprett TPU ressurser**: TPU oppsett er ikke helt avklart enda!"
+    icon: "gpu-card"
+    type: danger
+    position: below-navbar
+    dismissable: false
+
   title: "Finjustering av språkmodell på Nav.no"
   description: "Introduksjon til finjustering av språkmodeller på data fra Nav.no"
 
