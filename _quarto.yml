@@ -19,8 +19,8 @@ website:
     left:
       - text: "Veiledning"
         href: index.ipynb
-      - text: "FAQ"
-        href: oss.qmd
+      - text: "Oppsett av TPU"
+        href: tpu.qmd
     right:
       - icon: slack
         href: https://nav-it.slack.com/archives/C04MRJ9SHM4

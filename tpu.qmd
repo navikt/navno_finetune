@@ -1,0 +1,121 @@
+# Oppsett av Cloud TPU VM
+
+Når vi jobber med språkmodeller er dette ofte såpass store modeller at laptopene
+våre kan trenge litt ekstra hjelp for å kunne finjustere. Vi skal her beskrive
+hvordan du kan få tilgang til maskinvare på GCP som er spesiallaget for nettopp
+å trene maskinlæringsmodeller (så fremt disse modellene er nevrale nettverk).
+
+[_TPU_](https://en.wikipedia.org/wiki/Tensor_Processing_Unit) står for
+**T**ensor **P**rocessing **U**nit og er et akseleratorkort spesielt utviklet av
+Google for å trene store nevrale nettverk. Som ansatt i Nav kan vi få tilgang
+til slik maskinvare gjennom [GCP](https://console.cloud.google.com/).
+
+::: {.callout-warning}
+## Bruk av TPU må ROS-es!
+
+Det er dessverre ikke tilgjengelige maskiner med TPU i GCP regionen som Nav har
+ROS for. Dette betyr at all bruk av TPU maskinvare foregår på eget ansvar og
+team som ønsker å bruke må ha med bruken av TPU i egen ROS (selv om maskinvaren
+kjører andre steder i EU).
+:::
+
+## Forberedelser
+
+Det første man må passe på er at man har installert
+[`gcloud`](https://cloud.google.com/sdk/docs/install-sdk) og er autentisert mot
+et prosjekt.
+
+::: {.callout-tip collapse="true"}
+## Definere standard prosjekt
+
+Hvis du ikke allerede har gjort det, kan det være lurt å definere et standard
+prosjekt slik at `gcloud` alltid bruker dette prosjektet.
+
+```bash
+gcloud config set project <Prosjekt ID>
+```
+
+Hvor `<Prosjekt ID>` er prosjektet du ønsker å bruke som standard.
+
+Hvis du er usikker på hvor du finner dette står det øverst til venstre når du
+logger inn på [Google Cloud](https://console.cloud.google.com).
+:::
+
+For å autentisere mot Google Cloud og gjør vi med følgende:
+
+```bash
+gcloud auth login
+```
+
+## Provisjonere en VM
+
+Det første vi trenger å gjøre er å [provisjonere en Cloud TPU
+VM](https://console.cloud.google.com/compute/tpus?inv=1&invt=AbrYZQ).
+
+```bash
+gcloud compute tpus tpu-vm create <Navn på VM> \
+    --project=<Prosjekt ID> \
+    --zone=europe-west4-a \
+    --accelerator-type=v6e-1 \
+    --version=v2-alpha-tpuv6e
+```
+
+::: {.callout collapse="true"}
+## Forklaring på variabler
+
+- `<Navn på VM>`
+    - Eget valgt navn på maskinen
+- `<Project ID>`
+    - Ditt GCP prosjekt
+- `--zone`
+    - Hvor skal maskinen provisjoneres
+    - I Nav bruker vi _vanligvis_ `europe-north1`. Det er dessverre ikke
+    tilgjengelige TPU i `europe-north1` så vi må bruke [en
+    annen](https://cloud.google.com/tpu/docs/regions-zones)
+- `--accelerator-type`
+    - Hvilken generasjon av TPU skal brukes, her kan
+    [pris](https://cloud.google.com/tpu?hl=en#pricing) være førende
+- `--version`
+    - Hvilken versjon av operativsystemet ønsker vi, henger sammen med hvilken
+    TPU generasjon man velger
+:::
+
+Når du kjører denne kommandoen for første gang kan man bli spurt om man ønsker å
+skru på API `[tpu.googleapis.com]`, dette er helt trygt og man kan svare `y`.
+
+## Koble til VM
+
+Når maskinen er provisjonert kan vi koble til med SSH gjennom `gcloud`.
+
+```bash
+gcloud compute tpus tpu-vm ssh <Navn på VM> \
+    --project=<Prosjekt ID> \
+    --zone=europe-west4-a
+```
+
+## Gjøre klar VM til finjustering
+
+Etter at man har koblet seg til VM-en er det nesten klart for å starte
+finjustering. Først må vi bare gjøre klart for Python og nødvendige pakker for
+TPU-en.
+
+Først trenger vi å installere [`uv`](https://docs.astral.sh/uv/) (som vi skal
+bruke som prosjektverktøy).
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Deretter skal vi oppdatere programvare på VM-en og installere en nødvendig
+ekstern avhengighet.
+
+```bash
+sudo apt-get update
+sudo apt-get install -y libopenblas-dev
+```
+
+Deretter kan vi opprette et prosjekt på TPU VM-en vår.
+
+```bash
+uv init --app --python 3.12 navno_finetune
+```
