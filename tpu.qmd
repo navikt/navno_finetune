@@ -14,9 +14,8 @@ til slik maskinvare gjennom [GCP](https://console.cloud.google.com/).
 ## Bruk av TPU må ROS-es!
 
 Det er dessverre ikke tilgjengelige maskiner med TPU i GCP regionen som Nav har
-ROS for. Dette betyr at all bruk av TPU maskinvare foregår på eget ansvar og
-team som ønsker å bruke må ha med bruken av TPU i egen ROS (selv om maskinvaren
-kjører andre steder i EU).
+ROS for. Dette betyr at all bruk av TPU maskinvare foregår på eget ansvar. Team
+som ønsker å bruke Cloud TPU VM må ha med bruken av TPU i egen ROS.
 :::
 
 ## Forberedelser
@@ -26,7 +25,7 @@ Det første man må passe på er at man har installert
 et prosjekt.
 
 ::: {.callout-tip collapse="true"}
-## Definere standard prosjekt
+## Sette GCP prosjekt
 
 Hvis du ikke allerede har gjort det, kan det være lurt å definere et standard
 prosjekt slik at `gcloud` alltid bruker dette prosjektet.
@@ -57,7 +56,8 @@ gcloud compute tpus tpu-vm create <Navn på VM> \
     --project=<Prosjekt ID> \
     --zone=europe-west4-a \
     --accelerator-type=v6e-1 \
-    --version=v2-alpha-tpuv6e
+    --version=v2-alpha-tpuv6e \
+    --tags=allow-ssh
 ```
 
 ::: {.callout collapse="true"}
@@ -93,6 +93,26 @@ gcloud compute tpus tpu-vm ssh <Navn på VM> \
     --zone=europe-west4-a
 ```
 
+### Koble til med VS Code
+
+For å kunne koble til med VS Code Remote SSH følger vi noen av stegene fra
+[Knast sitt
+oppsett](https://docs.knada.io/analyse/knast/kom-i-gang/#flgende-ma-gjres-pa-lokal-maskin-for-a-koble-vs-code-til-knast).
+
+1. Opprett SSH-nøkkel som beskrevet i Knast oppsettet (steg 4)
+1. Kopier `.pub` delen til TPU VM (steg 5)
+1. Legg til TPU VM i din egen `.ssh/config`:
+```bash
+Host tpuv6e-1
+    User user
+    Hostname <External IP>
+```
+- Du finner **External IP** på [TPU oversikten på Google
+Cloud](https://console.cloud.google.com/compute/tpus)
+
+Tilslutt er det bare å følge steg 7 på Knast veiledningen for å få VS Code til å
+koble til TPU VM-en.
+
 ## Gjøre klar VM til finjustering
 
 Etter at man har koblet seg til VM-en er det nesten klart for å starte
@@ -117,5 +137,69 @@ sudo apt-get install -y libopenblas-dev
 Deretter kan vi opprette et prosjekt på TPU VM-en vår.
 
 ```bash
-uv init --app --python 3.12 navno_finetune
+uv init --app --python 3.11 navno_finetune
+```
+
+::: {.callout-tip collapse="true"}
+## Gammel versjon av Python?
+
+`torch_xla` støtter ikke Python 3.12 eller 3.13 enda så vi må forholde oss
+til 3.11 enn så lenge. Heldigvis er dette veldig enkelt med `uv`.
+:::
+
+Rediger `pyproject.toml` og erstatt `dependencies` med følgende:
+
+```toml
+dependencies = [
+    "torch>=2.6.0",
+    "torch_xla[tpu]>=2.6.0",
+]
+
+[tool.uv]
+find-links = [
+    "https://storage.googleapis.com/libtpu-wheels/index.html",
+    "https://storage.googleapis.com/libtpu-releases/index.html",
+]
+prerelease = "allow"
+```
+
+Hopp inn i prosjektet og kjør:
+
+```bash
+cd navno_finetune/
+uv sync
+```
+
+## Stoppe VM når man er ferdig
+
+En Cloud TPU VM koster penger per time den er aktivert (på samme måte som
+Knast), så det er en god ide å stoppe den når man ikke ønsker å bruke den mer
+(på Knast skjer dette automagisk, men dessverre ikke med TPU VM).
+
+For å stoppe VM-en kan man kjøre følgende:
+
+```bash
+gcloud compute tpus tpu-vm stop <Navn på VM> --zone=europe-west4-a
+```
+
+Når VM-en er stoppet vil det ikke koste prosjektet noe, men man vil kunne
+beholde oppsett på VM-en.
+
+### Start VM for å fortsette
+
+Når man så er klar for å fortsette å arbeide kan man start VM-en igjen med:
+
+```bash
+gcloud compute tpus tpu-vm start <Navn på VM> --zone=europe-west4-a
+```
+
+### Slette VM
+
+Hvis du vet at du ikke skal bruke VM-en igjen (eller tenker at man kan opprette
+en helt ny VM) kan man slette VM-en helt.
+
+Følgende kommando sletter VM fullstendig:
+
+```bash
+gcloud compute tpus tpu-vm delete <Navn på VM> --zone=europe-west4-a --quiet
 ```
