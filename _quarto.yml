@@ -36,3 +36,5 @@ format:
       dark: darkly
     toc: true
     highlight-style: atom-one
+execute:
+  eval: false

@@ -1,0 +1,25 @@
+name: Publiser datafortelling
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+      - name: Render project
+        uses: quarto-dev/quarto-actions/render@v2
+      - name: Last opp til Datamarkedsplassen
+        uses: navikt/story-upload@v1
+        with:
+          id: 22139f5a-35c5-4d3d-ad9d-b79f7102e1be
+          dir: _site
+          team_token: ${{ secrets.TEAM_TOKEN }}
+          env: prod
+          public: false
