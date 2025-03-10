@@ -110,8 +110,26 @@ Host tpuv6e-1
 - Du finner **External IP** på [TPU oversikten på Google
 Cloud](https://console.cloud.google.com/compute/tpus)
 
+::: {.callout-note collapse="true"}
+## IP vil forandre seg
+
+Når TPU VM-en startes og stoppes vil `External IP` endre seg. Man vil derfor
+måtte gjøre oppdateringer i SSH konfigurasjon.
+:::
+
 Tilslutt er det bare å følge steg 7 på Knast veiledningen for å få VS Code til å
 koble til TPU VM-en.
+
+::: {.callout-tip}
+## Jupyter notebook på Remote SSH
+
+For en bedre opplevelse med remote SSH kan det være greit å installere følgende
+pakker:
+
+```bash
+uv add --dev ipykernel ipywidgets
+```
+:::
 
 ## Gjøre klar VM til finjustering
 
@@ -193,6 +211,13 @@ Når man så er klar for å fortsette å arbeide kan man start VM-en igjen med:
 gcloud compute tpus tpu-vm start <Navn på VM> --zone=europe-west4-a
 ```
 
+::: {.callout-note collapse="true"}
+## IP vil forandre seg
+
+Når TPU VM-en startes og stoppes vil `External IP` endre seg. Man vil derfor
+måtte gjøre oppdateringer i SSH konfigurasjon.
+:::
+
 ### Slette VM
 
 Hvis du vet at du ikke skal bruke VM-en igjen (eller tenker at man kan opprette
@@ -203,3 +228,29 @@ Følgende kommando sletter VM fullstendig:
 ```bash
 gcloud compute tpus tpu-vm delete <Navn på VM> --zone=europe-west4-a --quiet
 ```
+
+## Tips og triks
+
+### Utnyttelse av TPU
+
+Når man installerer `torch_xla[tpu]` vil man også installere
+[`tpu-info`](https://pypi.org/project/tpu-info/) som standard. Dette er et nytte
+verktøy som kan vise utnyttelsen av TPU (f.eks. hvis man er usikker på om
+modellen kjører på TPU-en).
+
+```bash
+uv run tpu-info
+```
+
+::: {.callout-tip collapse="true"}
+## Hvis `tpu-info` ikke er installert
+
+Med `uv` er det enkelt å kjøre Python programmer som ikke er installert. Skulle
+`uv run` kommando-en over feile kan du alltids gjøre det samme med:
+
+```bash
+uvx tpu-info
+```
+
+Som vil laste ned `tpu-info` om det ikke er installert.
+:::
