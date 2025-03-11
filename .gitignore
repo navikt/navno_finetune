@@ -1,6 +1,7 @@
 .quarto/
 _site/
 *.parquet
+gte-modernbert-navno/
 
 .DS_Store
 
