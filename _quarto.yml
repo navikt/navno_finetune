@@ -17,8 +17,10 @@ website:
     logo: assets/nav_logo.png
     logo-alt: "Logo til NAV - Arbeids- og velferdsetaten"
     left:
-      - text: "Veiledning"
+      - text: "Grunnleggende"
         href: index.ipynb
+      - text: "Matryoshka"
+        href: matryoshka.ipynb
     right:
       - icon: slack
         href: https://nav-it.slack.com/archives/C04MRJ9SHM4
