@@ -11,6 +11,7 @@ fix:
     uv run ruff check --fix .
     uv run ruff format .
     uv run nbstripout index.ipynb
+    uv run nbstripout matryoshka.ipynb
 
 # Sjekk at alt ser bra ut med pre-commit
 lint:
