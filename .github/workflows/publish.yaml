@@ -15,7 +15,7 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
       - name: Render project
         uses: quarto-dev/quarto-actions/render@v2
-      - name: Last opp til Datamarkedsplassen
+      - name: Last opp internt
         uses: navikt/story-upload@v1
         with:
           id: 22139f5a-35c5-4d3d-ad9d-b79f7102e1be
@@ -23,3 +23,11 @@ jobs:
           team_token: ${{ secrets.TEAM_TOKEN }}
           env: prod
           public: false
+      - name: Last opp eksternt
+        uses: navikt/story-upload@v1
+        with:
+          id: df6196d8-b4ca-4571-b150-158fcaa960aa
+          dir: _site
+          team_token: ${{ secrets.TEAM_TOKEN }}
+          env: prod
+          public: true
